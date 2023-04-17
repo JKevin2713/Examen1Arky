@@ -10,6 +10,230 @@ ClearScreen Macro
        int       10h		;ejecute la int 10h/ servicio 07h, desplaze la ventana hacia abajo.
        PopA
 EndM
+imprimed Macro
+whiled:
+	call printAX
+	inc columna
+	inc columna
+	inc columna
+	MoverC columna, fila
+	inc ax
+	cmp columna, 19
+	jnle cambiarfila
+	jmp sigueimprimiendo
+cambiarfila:
+	inc fila
+	mov columna, 1
+	MoverC columna, fila
+sigueimprimiendo:
+	cmp al, cantidaddias
+	jnle saled
+	jmp whiled
+saled:
+EndM
+imprimel Macro
+whilel:
+	call printAX
+	inc columna
+	inc columna
+	inc columna
+	MoverC columna, fila
+	inc ax
+	cmp columna, 19
+	jnle cambiarfilal
+	jmp sigueimprimiendol
+cambiarfilal:
+	inc fila
+	mov columna, 1
+	MoverC columna, fila
+sigueimprimiendol:
+	cmp al, cantidaddias
+	jnle salel
+	jmp whilel
+salel:
+EndM
+imprimek Macro
+whilek:
+	call printAX
+	inc columna
+	inc columna
+	inc columna
+	MoverC columna, fila
+	inc ax
+	cmp columna, 19
+	jnle cambiarfilak
+	jmp sigueimprimiendok
+cambiarfilak:
+	inc fila
+	mov columna, 1
+	MoverC columna, fila
+sigueimprimiendok:
+	cmp al, cantidaddias
+	jnle salek
+	jmp whilek
+salek:
+EndM
+imprimem Macro
+whilem:
+	call printAX
+	inc columna
+	inc columna
+	inc columna
+	MoverC columna, fila
+	inc ax
+	cmp columna, 19
+	jnle cambiarfilam
+	jmp sigueimprimiendom
+cambiarfilam:
+	inc fila
+	mov columna, 1
+	MoverC columna, fila
+sigueimprimiendom:
+	cmp al, cantidaddias
+	jnle salem
+	jmp whilem
+salem:
+EndM
+imprimej Macro
+whilej:
+	call printAX
+	inc columna
+	inc columna
+	inc columna
+	MoverC columna, fila
+	inc ax
+	cmp columna, 19
+	jnle cambiarfilaj
+	jmp sigueimprimiendoj
+cambiarfilaj:
+	inc fila
+	mov columna, 1
+	MoverC columna, fila
+sigueimprimiendoj:
+	cmp al, cantidaddias
+	jnle salej
+	jmp whilej
+salej:
+EndM
+imprimev Macro
+whilev:
+	call printAX
+	inc columna
+	inc columna
+	inc columna
+	MoverC columna, fila
+	inc ax
+	cmp columna, 19
+	jnle cambiarfilav
+	jmp sigueimprimiendov
+cambiarfilav:
+	inc fila
+	mov columna, 1
+	MoverC columna, fila
+sigueimprimiendov:
+	cmp al, cantidaddias
+	jnle salev
+	jmp whilev
+salev:
+EndM
+imprimes Macro
+whiles:
+	call printAX
+	inc columna
+	inc columna
+	inc columna
+	MoverC columna, fila
+	inc ax
+	cmp columna, 19
+	jnle cambiarfilas
+	jmp sigueimprimiendos
+cambiarfilas:
+	inc fila
+	mov columna, 1
+	MoverC columna, fila
+sigueimprimiendos:
+	cmp al, cantidaddias
+	jnle sales
+	jmp whiles
+sales:
+EndM
+
+Calculadoomsday Macro Year, siglo, doomsiglo, temp1, residuo, aux, temp2, temp3, doomyear
+    mov ax, year
+    mov bx, 100
+    div bx
+    mov cl, al
+	cmp ah, 0
+	inc cl
+	mov siglo, cx
+	
+	;calcula el doomsday del siglo
+	xor cx, cx
+	mov bl, 4
+	div bl
+	cmp ah, 0    ;martes
+	je martes
+	cmp ah, 1	 ;domingo
+	je domingo
+	cmp ah, 2	 ;viernes
+	je viernes
+	cmp ah, 3	 ;miercoles
+	je miercoles
+	
+martes:
+	mov cl, 2
+	jmp seguircalculo
+domingo:
+	mov cl, 0
+	jmp seguircalculo
+viernes:
+	mov cl, 5
+	jmp seguircalculo
+miercoles:
+	mov cl, 3
+	jmp seguircalculo
+	
+seguircalculo:
+	mov doomsiglo, cl
+	
+	;calcula el doomsday del year
+	xor ax, ax
+	xor bx, bx
+	mov ax, year
+	mov bl, 100
+	div bl
+	mov cl, ah
+	mov aux, cl
+	
+	xor ax, ax
+	mov al, aux
+	mov bl, 12
+	div bl
+	mov cl, al
+	mov temp1, cl
+	xor cx, cx
+	mov residuo, ah
+	xor ax, ax
+	mov al, residuo
+	mov bl, 4
+	div bl
+	mov cl, al
+	mov temp2, cl
+	mov ah, temp1
+	mov al, residuo
+	add ah, al
+	mov al, temp2
+	add ah, temp2
+	mov temp3, ah
+	xor ax, ax
+	xor bx, bx
+	mov al,temp3
+	mov bl, 7
+	div bl
+	mov al, doomsiglo
+	add ah, al
+	mov doomyear, ah
+EndM
 
 SacaYear Macro
 		inc si			;Incrementamos si una unidad
@@ -65,67 +289,69 @@ MoverC Macro X,Y
        PopA
 EndM
 
-printAXM Macro
-; imprime a la salida estándar un número que supone estar en el AX
-; supone que es un número positivo y natural en 16 bits.
-; lo imprime en decimal.  
-
-    push AX
-    push BX
-    push CX
-    push DX
-
-    xor cx, cx
-    mov bx, 10
-ciclo1PAXM: xor dx, dx
-    div bx
-    push dx
-    inc cx
-    cmp ax, 0
-    jne ciclo1PAXM
-    mov ah, 02h
+bisiestoenerom Macro year, auxmes
+	;mov ax, year
+	;mov bx, 400
+	;div bx
+	;mov cl, al
+	;cmp ah, 0
+	;je bisiestoenero
 	
-ciclo2PAXM: pop DX
-    add dl, 30h
-    int 21h
-    loop ciclo2PAXM
-
-    pop DX
-    pop CX
-    pop BX
-    pop AX
+	;mov ax, year
+	;mov bl, 4
+	;div bl
+	mov cl, al
+	cmp ah, 0
+	je bisiestoenero
+	
+	mov ax, year
+	mov bl, 100
+	div bl
+	mov cl, al
+	cmp ah, 0
+	je nobisiestoenero
+bisiestoenero:
+	mov auxmes, 4
+	jmp salir
+nobisiestoenero:
+	mov auxmes, 3
+salir:
 EndM
 
-printAX Macro
-; imprime a la salida estándar un número que supone estar en el AX
-; supone que es un número positivo y natural en 16 bits.
-; lo imprime en decimal.  
-
-    push AX
-    push BX
-    push CX
-    push DX
-
-    xor cx, cx
-    mov bx, 10
-ciclo1PAX: xor dx, dx
-    div bx
-    push dx
-    inc cx
-    cmp ax, 0
-    jne ciclo1PAX
-    mov ah, 02h
+bisiestofebrerom Macro year, auxmes, cantidaddias
+	;verificar si es bisiesto
+	mov ax, year
+	mov bx, 400
+	div bx
+	mov cl, al
+	cmp ah, 0
+	je bisiesto
 	
-ciclo2PAX: pop DX
-    add dl, 30h
-    int 21h
-    loop ciclo2PAX
+	mov ax, year
+	mov bl, 4
+	div bl
+	mov cl, al
+	cmp ah, 0
+	je bisiesto
+	
+	mov ax, year
+	mov bl, 100
+	div bl
+	mov cl, al
+	cmp ah, 0
+	je nobisiesto
+	
+nobisiesto:
+	mov auxmes, 28
+	mov cantidaddias, 28
+	jmp salirbisiestofebrero
+bisiesto:
+	mov auxmes, 29
+	mov cantidaddias, 29
+salirbisiestofebrero:
 
-    pop DX
-    pop CX
-    pop BX
-    pop AX
 EndM
+
 
 PushA Macro 
        push      ax		;Guarda los todos los registro en... 
